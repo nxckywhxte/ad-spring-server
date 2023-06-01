@@ -1,0 +1,22 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://31.134.130.194:8888/db-spring
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  liquibase:
+    driver-class-name: org.postgresql.Driver
+    user: postgres
+    password: postgres
+    change-log: db/changelog/changelog.xml
+  security:
+    user:
+      name: nw
+      password: 12345
