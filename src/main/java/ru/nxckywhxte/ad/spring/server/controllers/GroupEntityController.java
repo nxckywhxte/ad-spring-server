@@ -3,37 +3,30 @@ package ru.nxckywhxte.ad.spring.server.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.nxckywhxte.ad.spring.server.dtos.GroupDto;
-import ru.nxckywhxte.ad.spring.server.entities.GroupEntity;
-import ru.nxckywhxte.ad.spring.server.mappers.GroupMapper;
-import ru.nxckywhxte.ad.spring.server.services.impl.GroupServiceImpl;
+import ru.nxckywhxte.ad.spring.server.services.GroupService;
 
 import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/api/v1/groups")
 @RequiredArgsConstructor
 public class GroupEntityController {
-    private final GroupMapper groupMapper;
-    private final GroupServiceImpl groupService;
+    private final GroupService groupService;
 
     @PostMapping()
     public GroupDto createGroup(@RequestBody GroupDto groupDto) {
-        GroupEntity groupEntity = groupMapper.map(groupDto);
-        GroupEntity newGroupEntity = groupService.createGroup(groupEntity);
-        return groupMapper.map(newGroupEntity);
+        return groupService.createGroup(groupDto);
     }
 
     @GetMapping()
     public Collection<GroupDto> getAllGroups() {
-        Collection<GroupEntity> allGroups = groupService.getAllGroups();
-        return allGroups.stream().map(groupMapper::map).toList();
+        return groupService.getAllGroups();
     }
 
     @GetMapping(value = "/{groupId}")
     public GroupDto getGroupById(@PathVariable String groupId) {
-        GroupEntity groupEntity = groupService.getGroupById(UUID.fromString(groupId));
-        return groupMapper.map(groupEntity);
+        return groupService.getGroupById(UUID.fromString(groupId));
     }
 
     @DeleteMapping(value = "/{groupId}")

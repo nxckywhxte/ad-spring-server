@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.nxckywhxte.ad.spring.server.dtos.RoleDto;
 import ru.nxckywhxte.ad.spring.server.entities.RoleEntity;
+import ru.nxckywhxte.ad.spring.server.mappers.RoleMapper;
 import ru.nxckywhxte.ad.spring.server.repositories.RoleRepository;
 import ru.nxckywhxte.ad.spring.server.services.RoleService;
 
@@ -15,35 +16,34 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-
-@Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
     @Override
-    public Collection<RoleEntity> getAllRoles() {
-        return roleRepository.findAll();
+    public Collection<RoleDto> getAllRoles() {
+        Collection<RoleEntity> allRoles = roleRepository.findAll();
+        return allRoles.stream().map(roleMapper::map).toList();
     }
 
     @Override
-    public RoleEntity getRoleById(UUID roleId) {
+    public RoleDto getRoleById(UUID roleId) {
         RoleEntity existRole = roleRepository.findRoleEntityById(roleId);
         if (Objects.equals(existRole, null)) {
             throw new ResponseStatusException(NOT_FOUND, "Роль с такими данными не найдена! Проверьте данные и попробуйте еще раз.");
         }
-        return existRole;
+        return roleMapper.map(existRole);
     }
 
     @Override
-    public RoleEntity getRoleByRoleName(String roleName) {
+    public RoleDto getRoleByRoleName(String roleName) {
         RoleEntity existRole = roleRepository.findRoleEntityByName(roleName);
         if (Objects.equals(existRole, null)) {
             throw new ResponseStatusException(NOT_FOUND, "Роль с такими данными не найдена! Проверьте данные и попробуйте еще раз.");
         }
-        return existRole;
+        return roleMapper.map(existRole);
     }
 
     @Override
@@ -52,15 +52,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleEntity createRole(RoleEntity roleEntity) {
-        RoleEntity existRole = roleRepository.findRoleEntityByName(roleEntity.getName());
+    public RoleDto createRole(RoleDto roleDto) {
+        RoleEntity existRole = roleRepository.findRoleEntityByName(roleDto.getName());
         if (Objects.nonNull(existRole)) {
             throw new ResponseStatusException(CONFLICT, "Роль с такими данными уже существует! Проверьте данные и попробуйте еще раз.");
         }
         RoleEntity newRole = RoleEntity.builder()
-                .name(roleEntity.getName())
+                .name(roleDto.getName())
                 .build();
         roleRepository.saveAndFlush(newRole);
-        return newRole;
+        return roleMapper.map(newRole);
     }
 }

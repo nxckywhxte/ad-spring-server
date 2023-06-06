@@ -2,20 +2,21 @@ package ru.nxckywhxte.ad.spring.server.services;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.nxckywhxte.ad.spring.server.dtos.RoleDto;
 import ru.nxckywhxte.ad.spring.server.entities.RoleEntity;
 
 import java.util.Collection;
 import java.util.UUID;
-
+@Service
 public interface RoleService {
-    public Collection<RoleEntity> getAllRoles();
+    public Collection<RoleDto> getAllRoles();
 
-    public RoleEntity getRoleById(UUID roleId);
+    public RoleDto getRoleById(UUID roleId);
 
-    public RoleEntity getRoleByRoleName(String roleName);
+    public RoleDto getRoleByRoleName(String roleName);
 
     public void removeRoleById(UUID roleId);
 
-    public RoleEntity createRole(RoleEntity roleEntity);
+    public RoleDto createRole(RoleDto roleDto);
 }

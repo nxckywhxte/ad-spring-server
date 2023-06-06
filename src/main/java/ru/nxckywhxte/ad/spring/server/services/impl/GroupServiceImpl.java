@@ -1,10 +1,11 @@
 package ru.nxckywhxte.ad.spring.server.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.nxckywhxte.ad.spring.server.dtos.GroupDto;
 import ru.nxckywhxte.ad.spring.server.entities.GroupEntity;
+import ru.nxckywhxte.ad.spring.server.mappers.GroupMapper;
 import ru.nxckywhxte.ad.spring.server.repositories.GroupRepository;
 import ru.nxckywhxte.ad.spring.server.services.GroupService;
 
@@ -14,33 +15,33 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-@Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
+    private final GroupMapper groupMapper;
     @Override
-    public Collection<GroupEntity> getAllGroups() {
-        return groupRepository.findAll();
+    public Collection<GroupDto> getAllGroups() {
+        Collection<GroupEntity> allGroups = groupRepository.findAll();
+        return allGroups.stream().map(groupMapper::map).toList();
     }
 
     @Override
-    public GroupEntity getGroupById(UUID groupId) {
+    public GroupDto getGroupById(UUID groupId) {
         GroupEntity existGroup = groupRepository.findGroupEntityById(groupId);
         if (Objects.equals(existGroup, null)) {
             throw new ResponseStatusException(NOT_FOUND, "Группа с такими данными не найдена! Проверьте данные и попробуйте еще раз.");
         }
-        return existGroup;
+        return groupMapper.map(existGroup);
     }
 
     @Override
-    public GroupEntity getGroupByGroupName(String groupName) {
+    public GroupDto getGroupByGroupName(String groupName) {
         GroupEntity existGroup = groupRepository.findGroupEntityByName(groupName);
         if (Objects.equals(existGroup, null)) {
             throw new ResponseStatusException(NOT_FOUND, "Группа с такими данными не найдена! Проверьте данные и попробуйте еще раз.");
         }
-        return existGroup;
+        return groupMapper.map(existGroup);
     }
 
     @Override
@@ -49,15 +50,15 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupEntity createGroup(GroupEntity groupEntity) {
-        GroupEntity existsGroup = groupRepository.findGroupEntityByName(groupEntity.getName());
+    public GroupDto createGroup(GroupDto groupDto) {
+        GroupEntity existsGroup = groupRepository.findGroupEntityByName(groupDto.getName());
         if (Objects.nonNull(existsGroup)) {
             throw new ResponseStatusException(CONFLICT, "Роль с такими данными уже существует! Проверьте данные и попробуйте еще раз.");
         }
         GroupEntity newGroup = GroupEntity.builder()
-                .name(groupEntity.getName())
+                .name(groupDto.getName())
                 .build();
         groupRepository.saveAndFlush(newGroup);
-        return newGroup;
+        return groupMapper.map(newGroup);
     }
 }

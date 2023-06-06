@@ -5,35 +5,31 @@ import org.springframework.web.bind.annotation.*;
 import ru.nxckywhxte.ad.spring.server.dtos.RoleDto;
 import ru.nxckywhxte.ad.spring.server.entities.RoleEntity;
 import ru.nxckywhxte.ad.spring.server.mappers.RoleMapper;
+import ru.nxckywhxte.ad.spring.server.services.RoleService;
 import ru.nxckywhxte.ad.spring.server.services.impl.RoleServiceImpl;
 
 import java.util.Collection;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
 public class RoleEntityController {
-    private final RoleMapper roleMapper;
-    private final RoleServiceImpl roleService;
+    private final RoleService roleService;
 
     @PostMapping()
     public RoleDto createRole(@RequestBody RoleDto roleDto) {
-        RoleEntity roleEntity = roleMapper.map(roleDto);
-        RoleEntity newRoleEntity = roleService.createRole(roleEntity);
-        return roleMapper.map(newRoleEntity);
+        return roleService.createRole(roleDto);
     }
 
     @GetMapping()
     public Collection<RoleDto> getAllRoles() {
-        Collection<RoleEntity> allRoles = roleService.getAllRoles();
-        return allRoles.stream().map(roleMapper::map).toList();
+        return roleService.getAllRoles();
     }
 
     @GetMapping(value = "/{roleId}")
     public RoleDto getRoleById(@PathVariable String roleId) {
-        RoleEntity roleEntity = roleService.getRoleById(UUID.fromString(roleId));
-        return roleMapper.map(roleEntity);
+        return roleService.getRoleById(UUID.fromString(roleId));
     }
 
     @DeleteMapping(value = "/{roleId}")

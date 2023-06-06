@@ -3,19 +3,27 @@ package ru.nxckywhxte.ad.spring.server.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import ru.nxckywhxte.ad.spring.server.entities.GroupEntity;
+import lombok.NoArgsConstructor;
 import ru.nxckywhxte.ad.spring.server.entities.RoleEntity;
 
 import java.util.Collection;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserDto {
-    private String username;
+public class RegisterDto {
     private String email;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String rawPassword;
+    private String username;
     private Collection<RoleEntity> roles;
-    private Collection<GroupEntity> groups;
+    @JsonProperty("access_token")
+    private String accessToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+
+
 }
