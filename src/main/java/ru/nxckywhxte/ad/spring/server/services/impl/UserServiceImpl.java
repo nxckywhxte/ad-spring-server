@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
                 .username(userDto.getUsername())
                 .groups(userDto.getGroups())
                 .roles(userDto.getRoles())
-                .hashedPassword(userDto.getRawPassword())
+                .password(userDto.getPassword())
                 .build();
         userRepository.saveAndFlush(newUser);
         return userMapper.map(newUser);

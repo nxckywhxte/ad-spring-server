@@ -27,7 +27,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "email")
     String email;
     @Column(name = "hashed_password")
-    String hashedPassword;
+    String password;
 
     @ManyToMany()
     Collection<RoleEntity> roles;
@@ -45,7 +45,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return hashedPassword;
+        return password;
     }
 
     @Override

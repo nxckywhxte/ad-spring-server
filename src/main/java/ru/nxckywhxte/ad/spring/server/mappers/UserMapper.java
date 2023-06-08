@@ -8,7 +8,6 @@ import ru.nxckywhxte.ad.spring.server.entities.UserEntity;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDto map(UserEntity userEntity);
-
     @InheritInverseConfiguration
     UserEntity map(UserDto userDto);
 }
