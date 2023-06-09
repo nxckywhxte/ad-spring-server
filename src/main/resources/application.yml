@@ -9,10 +9,10 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 
-#  liquibase:
+#    liquibase:
 #    driver-class-name: org.postgresql.Driver
 #    user: postgres
 #    password: postgres

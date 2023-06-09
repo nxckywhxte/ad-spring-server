@@ -29,13 +29,13 @@ public class UserEntity implements UserDetails {
     @Column(name = "hashed_password")
     String password;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     Collection<RoleEntity> roles;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     Collection<GroupEntity> groups;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Collection<TokenEntity> tokens;
 
     @Override

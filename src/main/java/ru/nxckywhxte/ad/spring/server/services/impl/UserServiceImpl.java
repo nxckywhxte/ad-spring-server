@@ -1,6 +1,8 @@
 package ru.nxckywhxte.ad.spring.server.services.impl;
 
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.nxckywhxte.ad.spring.server.dtos.UserDto;
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
         return allUsers.stream().map(userMapper::map).toList();
     }
 
+
     @Override
     public UserDto getOneUserById(UUID userId) {
         UserEntity existsUser = userRepository.findUserEntityById(userId);
@@ -52,12 +55,13 @@ public class UserServiceImpl implements UserService {
         if (Objects.nonNull(existUser)) {
             throw new ResponseStatusException(CONFLICT, "Пользователь с такими данными уже существует! Проверьте данные и попробуйте еще раз.");
         }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         UserEntity newUser = UserEntity.builder()
                 .email(userDto.getEmail())
                 .username(userDto.getUsername())
                 .groups(userDto.getGroups())
                 .roles(userDto.getRoles())
-                .password(userDto.getPassword())
+                .password(encoder.encode(userDto.getPassword()))
                 .build();
         userRepository.saveAndFlush(newUser);
         return userMapper.map(newUser);

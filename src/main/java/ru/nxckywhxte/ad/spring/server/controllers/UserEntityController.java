@@ -31,6 +31,7 @@ public class UserEntityController {
 
     @GetMapping("/{username}")
     public UserDto getOneUserByUserName(@PathVariable String username) {
+
         return userService.getOneUserByUserName(username);
     }
 }
